@@ -143,11 +143,28 @@ module.exports = {
           '0%,70%,100%': { opacity: '1' },
           '20%,50%': { opacity: '0' },
         },
+        blob: {
+          '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
+          '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+          '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+        },
+        'blob-slow': {
+          '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
+          '50%': { transform: 'translate(-40px, 30px) scale(1.05)' },
+        },
+        'blob-reverse': {
+          '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
+          '33%': { transform: 'translate(-30px, 40px) scale(0.95)' },
+          '66%': { transform: 'translate(20px, -30px) scale(1.1)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'caret-blink': 'caret-blink 1.25s ease-out infinite',
+        blob: 'blob 18s ease-in-out infinite',
+        'blob-slow': 'blob-slow 22s ease-in-out infinite',
+        'blob-reverse': 'blob-reverse 20s ease-in-out infinite',
       },
       screens: {
         '3xl': '1920px',

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,8 +11,6 @@ import { Turnstile } from '@marsidev/react-turnstile';
 import { browserSupportsWebAuthn, startAuthentication } from '@simplewebauthn/browser';
 import { KeyRoundIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { FaIdCardClip } from 'react-icons/fa6';
-import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate } from 'react-router';
 import { match } from 'ts-pattern';
 import { z } from 'zod';
@@ -23,7 +22,6 @@ import { env } from '@documenso/lib/utils/env';
 import { zEmail } from '@documenso/lib/utils/zod';
 import { trpc } from '@documenso/trpc/react';
 import { ZCurrentPasswordSchema } from '@documenso/trpc/server/auth-router/schema';
-import { cn } from '@documenso/ui/lib/utils';
 import { Button } from '@documenso/ui/primitives/button';
 import {
   Dialog,
@@ -45,6 +43,9 @@ import { PasswordInput } from '@documenso/ui/primitives/password-input';
 import { PinInput, PinInputGroup, PinInputSlot } from '@documenso/ui/primitives/pin-input';
 import { useToast } from '@documenso/ui/primitives/use-toast';
 
+import { AuthShell } from '~/components/general/auth/auth-shell';
+import { SocialAuthButtons } from '~/components/general/auth/social-auth-buttons';
+
 const CommonErrorMessages: Record<string, MessageDescriptor> = {
   [AuthenticationErrorCode.AccountDisabled]: msg`This account has been disabled. Please contact support.`,
 };
@@ -60,6 +61,9 @@ const handleFallbackErrorMessages = (code: string) => {
 };
 
 const LOGIN_REDIRECT_PATH = '/';
+
+const inputClasses =
+  'h-11 rounded-lg border-border/70 bg-background/60 transition-shadow duration-200 focus-visible:ring-2 focus-visible:ring-documenso-400/60 focus-visible:ring-offset-0 focus-visible:shadow-[0_0_0_4px_rgba(162,231,113,0.18)]';
 
 export const ZSignInFormSchema = z.object({
   email: zEmail().min(1),
@@ -78,6 +82,8 @@ export type SignInFormProps = {
   isOIDCSSOEnabled?: boolean;
   oidcProviderLabel?: string;
   returnTo?: string;
+  headerSlot?: ReactNode;
+  footerSlot?: ReactNode;
 };
 
 export const SignInForm = ({
@@ -88,6 +94,8 @@ export const SignInForm = ({
   isOIDCSSOEnabled,
   oidcProviderLabel,
   returnTo,
+  headerSlot,
+  footerSlot,
 }: SignInFormProps) => {
   const { _ } = useLingui();
   const { toast } = useToast();
@@ -340,155 +348,120 @@ export const SignInForm = ({
 
   return (
     <Form {...form}>
-      <form
-        className={cn('flex w-full flex-col gap-y-4', className)}
-        onSubmit={form.handleSubmit(onFormSubmit)}
+      <AuthShell
+        className={className}
+        title={<Trans>Sign in to your account</Trans>}
+        description={<Trans>Welcome back, we are lucky to have you.</Trans>}
+        headerSlot={headerSlot}
+        footerSlot={footerSlot}
       >
-        <fieldset
-          className="flex w-full flex-col gap-y-4"
-          disabled={isSubmitting || isPasskeyLoading}
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <Trans>Email</Trans>
-                </FormLabel>
+        <form className="flex w-full flex-col gap-y-4" onSubmit={form.handleSubmit(onFormSubmit)}>
+          <fieldset
+            className="flex w-full flex-col gap-y-4"
+            disabled={isSubmitting || isPasskeyLoading}
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Email</Trans>
+                  </FormLabel>
 
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
+                  <FormControl>
+                    <Input type="email" autoComplete="email" className={inputClasses} {...field} />
+                  </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <Trans>Password</Trans>
-                </FormLabel>
-
-                <FormControl>
-                  <PasswordInput {...field} />
-                </FormControl>
-
-                <FormMessage />
-
-                <p className="mt-2 text-right">
-                  <Link
-                    to="/forgot-password"
-                    className="text-sm text-muted-foreground duration-200 hover:opacity-70"
-                  >
-                    <Trans>Forgot your password?</Trans>
-                  </Link>
-                </p>
-              </FormItem>
-            )}
-          />
-
-          {turnstileSiteKey && (
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={turnstileSiteKey}
-              onSuccess={setCaptchaToken}
-              onExpire={() => setCaptchaToken(null)}
-              options={{
-                size: 'flexible',
-                appearance: 'interaction-only',
-              }}
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          )}
 
-          <Button
-            type="submit"
-            size="lg"
-            loading={isSubmitting}
-            className="dark:bg-documenso dark:hover:opacity-90"
-          >
-            {isSubmitting ? <Trans>Signing in...</Trans> : <Trans>Sign In</Trans>}
-          </Button>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between gap-x-2">
+                    <FormLabel>
+                      <Trans>Password</Trans>
+                    </FormLabel>
 
-          {!isEmbeddedRedirect && (
-            <>
-              {hasSocialAuthEnabled && (
-                <div className="relative flex items-center justify-center gap-x-4 py-2 text-xs uppercase">
-                  <div className="h-px flex-1 bg-border" />
-                  <span className="bg-transparent text-muted-foreground">
-                    <Trans>Or continue with</Trans>
-                  </span>
-                  <div className="h-px flex-1 bg-border" />
-                </div>
+                    <Link
+                      to="/forgot-password"
+                      className="text-xs font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                    >
+                      <Trans>Forgot your password?</Trans>
+                    </Link>
+                  </div>
+
+                  <FormControl>
+                    <PasswordInput
+                      autoComplete="current-password"
+                      className={inputClasses}
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
               )}
+            />
 
-              {isGoogleSSOEnabled && (
-                <Button
-                  type="button"
-                  size="lg"
-                  variant="outline"
-                  className="border bg-background text-muted-foreground"
-                  disabled={isSubmitting}
-                  onClick={onSignInWithGoogleClick}
-                >
-                  <FcGoogle className="mr-2 h-5 w-5" />
-                  Google
-                </Button>
-              )}
+            {turnstileSiteKey && (
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={turnstileSiteKey}
+                onSuccess={setCaptchaToken}
+                onExpire={() => setCaptchaToken(null)}
+                options={{
+                  size: 'flexible',
+                  appearance: 'interaction-only',
+                }}
+              />
+            )}
 
-              {isMicrosoftSSOEnabled && (
-                <Button
-                  type="button"
-                  size="lg"
-                  variant="outline"
-                  className="border bg-background text-muted-foreground"
-                  disabled={isSubmitting}
-                  onClick={onSignInWithMicrosoftClick}
-                >
-                  <img
-                    className="mr-2 h-4 w-4"
-                    alt="Microsoft Logo"
-                    src={'/static/microsoft.svg'}
-                  />
-                  Microsoft
-                </Button>
-              )}
+            <Button
+              type="submit"
+              size="lg"
+              loading={isSubmitting}
+              className="mt-2 h-11 rounded-lg bg-documenso-500 text-foreground shadow-sm transition-all duration-200 hover:bg-documenso-500/90 hover:shadow-md active:scale-[0.99] dark:bg-documenso dark:hover:bg-documenso/90"
+            >
+              {isSubmitting ? <Trans>Signing in...</Trans> : <Trans>Sign In</Trans>}
+            </Button>
 
-              {isOIDCSSOEnabled && (
-                <Button
-                  type="button"
-                  size="lg"
-                  variant="outline"
-                  className="border bg-background text-muted-foreground"
-                  disabled={isSubmitting}
-                  onClick={onSignInWithOIDCClick}
-                >
-                  <FaIdCardClip className="mr-2 h-5 w-5" />
-                  {oidcProviderLabel || 'OIDC'}
-                </Button>
-              )}
-            </>
-          )}
+            {!isEmbeddedRedirect && hasSocialAuthEnabled && (
+              <SocialAuthButtons
+                mode="signin"
+                isGoogleSSOEnabled={isGoogleSSOEnabled}
+                isMicrosoftSSOEnabled={isMicrosoftSSOEnabled}
+                isOIDCSSOEnabled={isOIDCSSOEnabled}
+                oidcProviderLabel={oidcProviderLabel}
+                disabled={isSubmitting}
+                onGoogleClick={onSignInWithGoogleClick}
+                onMicrosoftClick={onSignInWithMicrosoftClick}
+                onOIDCClick={onSignInWithOIDCClick}
+              />
+            )}
 
-          <Button
-            type="button"
-            size="lg"
-            variant="outline"
-            disabled={isSubmitting}
-            loading={isPasskeyLoading}
-            className="border bg-background text-muted-foreground"
-            onClick={onSignInWithPasskey}
-          >
-            {!isPasskeyLoading && <KeyRoundIcon className="-ml-1 mr-1 h-5 w-5" />}
-            <Trans>Passkey</Trans>
-          </Button>
-        </fieldset>
-      </form>
+            {!isEmbeddedRedirect && (
+              <Button
+                type="button"
+                size="lg"
+                variant="outline"
+                disabled={isSubmitting}
+                loading={isPasskeyLoading}
+                className="h-11 rounded-lg border-border/70 bg-background/60 text-foreground/80 transition-all hover:border-border hover:bg-background hover:text-foreground hover:shadow-sm active:scale-[0.99]"
+                onClick={onSignInWithPasskey}
+              >
+                {!isPasskeyLoading && <KeyRoundIcon className="-ml-1 mr-2 h-4 w-4" />}
+                <Trans>Passkey</Trans>
+              </Button>
+            )}
+          </fieldset>
+        </form>
+      </AuthShell>
 
       <Dialog
         open={isTwoFactorAuthenticationDialogOpen}

@@ -77,46 +77,37 @@ export default function SignIn({ loaderData }: Route.ComponentProps) {
     setIsEmbeddedRedirect(params.get('embedded') === 'true');
   }, []);
 
+  const showSignupLink = !isEmbeddedRedirect && env('NEXT_PUBLIC_DISABLE_SIGNUP') !== 'true';
+
   return (
-    <div className="w-screen max-w-lg px-4">
-      <div className="z-10 rounded-xl border border-border bg-neutral-100 p-6 dark:bg-background">
-        {signupError && (
-          <Alert variant="destructive" className="mb-4">
+    <SignInForm
+      isGoogleSSOEnabled={isGoogleSSOEnabled}
+      isMicrosoftSSOEnabled={isMicrosoftSSOEnabled}
+      isOIDCSSOEnabled={isOIDCSSOEnabled}
+      oidcProviderLabel={oidcProviderLabel}
+      returnTo={returnTo}
+      headerSlot={
+        signupError ? (
+          <Alert variant="destructive" aria-live="polite">
             <AlertDescription>{_(signupError)}</AlertDescription>
           </Alert>
-        )}
-
-        <h1 className="text-2xl font-semibold">
-          <Trans>Sign in to your account</Trans>
-        </h1>
-
-        <p className="mt-2 text-sm text-muted-foreground">
-          <Trans>Welcome back, we are lucky to have you.</Trans>
-        </p>
-        <hr className="-mx-6 my-4" />
-
-        <SignInForm
-          isGoogleSSOEnabled={isGoogleSSOEnabled}
-          isMicrosoftSSOEnabled={isMicrosoftSSOEnabled}
-          isOIDCSSOEnabled={isOIDCSSOEnabled}
-          oidcProviderLabel={oidcProviderLabel}
-          returnTo={returnTo}
-        />
-
-        {!isEmbeddedRedirect && env('NEXT_PUBLIC_DISABLE_SIGNUP') !== 'true' && (
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+        ) : undefined
+      }
+      footerSlot={
+        showSignupLink ? (
+          <p className="text-sm text-muted-foreground">
             <Trans>
               Don't have an account?{' '}
               <Link
                 to={returnTo ? `/signup?returnTo=${encodeURIComponent(returnTo)}` : '/signup'}
-                className="text-documenso-700 duration-200 hover:opacity-70"
+                className="font-medium text-foreground transition-colors hover:text-documenso-700"
               >
                 Sign up
               </Link>
             </Trans>
           </p>
-        )}
-      </div>
-    </div>
+        ) : undefined
+      }
+    />
   );
 }

@@ -8,12 +8,9 @@ import { Trans } from '@lingui/react/macro';
 import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { Turnstile } from '@marsidev/react-turnstile';
 import { useForm } from 'react-hook-form';
-import { FaIdCardClip } from 'react-icons/fa6';
-import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { z } from 'zod';
 
-import communityCardsImage from '@documenso/assets/images/community-cards.png';
 import { authClient } from '@documenso/auth/client';
 import { useAnalytics } from '@documenso/lib/client-only/hooks/use-analytics';
 import { ZNameSchema } from '@documenso/lib/constants/auth';
@@ -21,7 +18,6 @@ import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
 import { env } from '@documenso/lib/utils/env';
 import { zEmail } from '@documenso/lib/utils/zod';
 import { ZPasswordSchema } from '@documenso/trpc/server/auth-router/schema';
-import { cn } from '@documenso/ui/lib/utils';
 import { Button } from '@documenso/ui/primitives/button';
 import {
   Form,
@@ -36,7 +32,8 @@ import { PasswordInput } from '@documenso/ui/primitives/password-input';
 import { SignaturePadDialog } from '@documenso/ui/primitives/signature-pad/signature-pad-dialog';
 import { useToast } from '@documenso/ui/primitives/use-toast';
 
-import { UserProfileTimur } from '~/components/general/user-profile-timur';
+import { AuthShell } from '~/components/general/auth/auth-shell';
+import { SocialAuthButtons } from '~/components/general/auth/social-auth-buttons';
 
 export const ZSignUpFormSchema = z
   .object({
@@ -72,6 +69,9 @@ export type SignUpFormProps = {
   isOIDCSSOEnabled?: boolean;
   returnTo?: string;
 };
+
+const inputClasses =
+  'h-11 rounded-lg border-border/70 bg-background/60 transition-shadow duration-200 focus-visible:ring-2 focus-visible:ring-documenso-400/60 focus-visible:ring-offset-0 focus-visible:shadow-[0_0_0_4px_rgba(162,231,113,0.18)]';
 
 export const SignUpForm = ({
   className,
@@ -207,238 +207,165 @@ export const SignUpForm = ({
   }, [form]);
 
   return (
-    <div className={cn('flex justify-center gap-x-12', className)}>
-      <div className="relative hidden flex-1 overflow-hidden rounded-xl border border-border xl:flex">
-        <div className="absolute -inset-8 -z-[2] backdrop-blur">
-          <img
-            src={communityCardsImage}
-            alt="community-cards"
-            className="h-full w-full object-cover dark:brightness-95 dark:contrast-[70%] dark:invert"
-          />
-        </div>
-
-        <div className="absolute -inset-8 -z-[1] bg-background/50 backdrop-blur-[2px]" />
-
-        <div className="relative flex h-full w-full flex-col items-center justify-evenly">
-          <div className="rounded-2xl border bg-background px-4 py-1 text-sm font-medium">
-            <Trans>User profiles are here!</Trans>
-          </div>
-
-          <div className="w-full max-w-md">
-            <UserProfileTimur
-              rows={2}
-              className="rounded-2xl border border-border bg-background shadow-md"
-            />
-          </div>
-
-          <div />
-        </div>
-      </div>
-
-      <div className="relative z-10 flex min-h-[min(850px,80vh)] w-full max-w-lg flex-col rounded-xl border border-border bg-neutral-100 p-6 dark:bg-background">
-        <div className="h-20">
-          <h1 className="text-xl font-semibold md:text-2xl">
-            <Trans>Create a new account</Trans>
-          </h1>
-
-          <p className="mt-2 text-xs text-muted-foreground md:text-sm">
+    <Form {...form}>
+      <AuthShell
+        className={className}
+        size="wide"
+        title={<Trans>Create a new account</Trans>}
+        description={
+          <Trans>Create your account and start using state-of-the-art document signing.</Trans>
+        }
+        footerSlot={
+          <p className="text-xs text-muted-foreground">
             <Trans>
-              Create your account and start using state-of-the-art document signing. Open and
-              beautiful signing is within your grasp.
+              By proceeding, you agree to our{' '}
+              <Link
+                to="https://documen.so/terms"
+                target="_blank"
+                className="font-medium text-foreground/80 transition-colors hover:text-documenso-700"
+              >
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link
+                to="https://documen.so/privacy"
+                target="_blank"
+                className="font-medium text-foreground/80 transition-colors hover:text-documenso-700"
+              >
+                Privacy Policy
+              </Link>
+              .
             </Trans>
           </p>
-        </div>
+        }
+      >
+        <form className="flex w-full flex-col gap-y-4" onSubmit={form.handleSubmit(onFormSubmit)}>
+          <fieldset className="flex w-full flex-col gap-y-4" disabled={isSubmitting}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Full Name</Trans>
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="text" autoComplete="name" className={inputClasses} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <hr className="-mx-6 my-4" />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Email Address</Trans>
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="email" autoComplete="email" className={inputClasses} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Form {...form}>
-          <form
-            className="flex w-full flex-1 flex-col gap-y-4"
-            onSubmit={form.handleSubmit(onFormSubmit)}
-          >
-            <fieldset className="flex w-full flex-col gap-y-4" disabled={isSubmitting}>
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <Trans>Full Name</Trans>
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="text" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Password</Trans>
+                  </FormLabel>
+
+                  <FormControl>
+                    <PasswordInput
+                      autoComplete="new-password"
+                      className={inputClasses}
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="signature"
+              render={({ field: { onChange, value } }) => (
+                <FormItem>
+                  <FormLabel>
+                    <Trans>Sign Here</Trans>
+                  </FormLabel>
+                  <FormControl>
+                    <SignaturePadDialog
+                      disabled={isSubmitting}
+                      value={value}
+                      onChange={(v) => onChange(v ?? '')}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {turnstileSiteKey && (
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={turnstileSiteKey}
+                onSuccess={setCaptchaToken}
+                onExpire={() => setCaptchaToken(null)}
+                options={{
+                  size: 'flexible',
+                  appearance: 'interaction-only',
+                }}
               />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <Trans>Email Address</Trans>
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <Trans>Password</Trans>
-                    </FormLabel>
-
-                    <FormControl>
-                      <PasswordInput {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="signature"
-                render={({ field: { onChange, value } }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <Trans>Sign Here</Trans>
-                    </FormLabel>
-                    <FormControl>
-                      <SignaturePadDialog
-                        disabled={isSubmitting}
-                        value={value}
-                        onChange={(v) => onChange(v ?? '')}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {turnstileSiteKey && (
-                <Turnstile
-                  ref={turnstileRef}
-                  siteKey={turnstileSiteKey}
-                  onSuccess={setCaptchaToken}
-                  onExpire={() => setCaptchaToken(null)}
-                  options={{
-                    size: 'flexible',
-                    appearance: 'interaction-only',
-                  }}
-                />
-              )}
-
-              {hasSocialAuthEnabled && (
-                <div className="relative flex items-center justify-center gap-x-4 py-2 text-xs uppercase">
-                  <div className="h-px flex-1 bg-border" />
-                  <span className="bg-transparent text-muted-foreground">
-                    <Trans>Or</Trans>
-                  </span>
-                  <div className="h-px flex-1 bg-border" />
-                </div>
-              )}
-
-              {isGoogleSSOEnabled && (
-                <Button
-                  type="button"
-                  size="lg"
-                  variant={'outline'}
-                  className="border bg-background text-muted-foreground"
-                  disabled={isSubmitting}
-                  onClick={onSignUpWithGoogleClick}
-                >
-                  <FcGoogle className="mr-2 h-5 w-5" />
-                  <Trans>Sign Up with Google</Trans>
-                </Button>
-              )}
-
-              {isMicrosoftSSOEnabled && (
-                <Button
-                  type="button"
-                  size="lg"
-                  variant={'outline'}
-                  className="border bg-background text-muted-foreground"
-                  disabled={isSubmitting}
-                  onClick={onSignUpWithMicrosoftClick}
-                >
-                  <img
-                    className="mr-2 h-4 w-4"
-                    alt="Microsoft Logo"
-                    src={'/static/microsoft.svg'}
-                  />
-                  <Trans>Sign Up with Microsoft</Trans>
-                </Button>
-              )}
-
-              {isOIDCSSOEnabled && (
-                <Button
-                  type="button"
-                  size="lg"
-                  variant={'outline'}
-                  className="border bg-background text-muted-foreground"
-                  disabled={isSubmitting}
-                  onClick={onSignUpWithOIDCClick}
-                >
-                  <FaIdCardClip className="mr-2 h-5 w-5" />
-                  <Trans>Sign Up with OIDC</Trans>
-                </Button>
-              )}
-
-              <p className="mt-4 text-sm text-muted-foreground">
-                <Trans>
-                  Already have an account?{' '}
-                  <Link to="/signin" className="text-documenso-700 duration-200 hover:opacity-70">
-                    Sign in instead
-                  </Link>
-                </Trans>
-              </p>
-            </fieldset>
+            )}
 
             <Button
-              loading={form.formState.isSubmitting}
+              loading={isSubmitting}
               type="submit"
               size="lg"
-              className="mt-6 w-full"
+              className="mt-2 h-11 rounded-lg bg-documenso-500 text-foreground shadow-sm transition-all duration-200 hover:bg-documenso-500/90 hover:shadow-md active:scale-[0.99] dark:bg-documenso dark:hover:bg-documenso/90"
             >
               <Trans>Create account</Trans>
             </Button>
-          </form>
-        </Form>
-        <p className="mt-6 text-xs text-muted-foreground">
-          <Trans>
-            By proceeding, you agree to our{' '}
-            <Link
-              to="https://documen.so/terms"
-              target="_blank"
-              className="text-documenso-700 duration-200 hover:opacity-70"
-            >
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link
-              to="https://documen.so/privacy"
-              target="_blank"
-              className="text-documenso-700 duration-200 hover:opacity-70"
-            >
-              Privacy Policy
-            </Link>
-            .
-          </Trans>
-        </p>
-      </div>
-    </div>
+
+            {hasSocialAuthEnabled && (
+              <SocialAuthButtons
+                mode="signup"
+                isGoogleSSOEnabled={isGoogleSSOEnabled}
+                isMicrosoftSSOEnabled={isMicrosoftSSOEnabled}
+                isOIDCSSOEnabled={isOIDCSSOEnabled}
+                disabled={isSubmitting}
+                dividerLabel={<Trans>Or</Trans>}
+                onGoogleClick={onSignUpWithGoogleClick}
+                onMicrosoftClick={onSignUpWithMicrosoftClick}
+                onOIDCClick={onSignUpWithOIDCClick}
+              />
+            )}
+
+            <p className="mt-2 text-center text-sm text-muted-foreground">
+              <Trans>
+                Already have an account?{' '}
+                <Link
+                  to="/signin"
+                  className="font-medium text-foreground transition-colors hover:text-documenso-700"
+                >
+                  Sign in instead
+                </Link>
+              </Trans>
+            </p>
+          </fieldset>
+        </form>
+      </AuthShell>
+    </Form>
   );
 };
