@@ -1467,7 +1467,6 @@ msgid "All"
 msgstr "Todos"
 
 #: apps/remix/app/components/general/app-command-menu.tsx
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "All documents"
 msgstr "Todos os documentos"
 
@@ -2016,10 +2015,6 @@ msgstr "Tem certeza de que deseja excluir esta equipe?"
 #: apps/remix/app/routes/_authenticated+/settings+/security.linked-accounts.tsx
 msgid "Are you sure?"
 msgstr "Você tem certeza?"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "As soon as documents are created or shared, they will appear here."
-msgstr "Assim que os documentos forem criados ou compartilhados, eles aparecerão aqui."
 
 #: apps/remix/app/components/tables/organisation-groups-table.tsx
 msgid "Assigned Teams"
@@ -2703,7 +2698,6 @@ msgstr "Preencha os campos para os seguintes signatários."
 #: apps/remix/app/components/tables/admin-document-jobs-table.tsx
 #: apps/remix/app/components/tables/organisation-insights-table.tsx
 #: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 #: packages/email/template-components/template-document-completed.tsx
 #: packages/email/template-components/template-document-recipient-signed.tsx
 #: packages/email/template-components/template-document-self-signed.tsx
@@ -2732,10 +2726,6 @@ msgstr "Documentos Concluídos"
 #: apps/remix/app/components/general/document/document-certificate-qr-view.tsx
 msgid "Completed on {formattedDate}"
 msgstr "Concluído em {formattedDate}"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Completed queue"
-msgstr "Fila de concluídos"
 
 #: packages/lib/constants/pdf-viewer-i18n.ts
 #: packages/lib/constants/pdf-viewer-i18n.ts
@@ -3304,10 +3294,6 @@ msgstr "Senha Atual"
 #: apps/remix/app/components/forms/password.tsx
 msgid "Current password is incorrect."
 msgstr "A senha atual está incorreta."
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Current pipeline split by document status"
-msgstr "Distribuição atual do pipeline por status do documento"
 
 #: apps/remix/app/components/dialogs/template-bulk-send-dialog.tsx
 msgid "Current recipients:"
@@ -4362,7 +4348,6 @@ msgstr "Baixar Modelo CSV"
 #: apps/remix/app/components/general/document/document-status.tsx
 #: apps/remix/app/components/general/envelope-editor/envelope-editor-header.tsx
 #: apps/remix/app/components/general/template/template-page-view-documents-table.tsx
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 #: packages/lib/constants/document.ts
 msgid "Draft"
 msgstr "Rascunho"
@@ -5594,6 +5579,10 @@ msgstr "Vá para suas <0>configurações de perfil público</0> para adicionar d
 msgid "Green"
 msgstr "Verde"
 
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
+msgid "Grid"
+msgstr "Grade"
+
 #: apps/remix/app/components/dialogs/team-group-create-dialog.tsx
 #: apps/remix/app/components/tables/organisation-groups-table.tsx
 #: apps/remix/app/components/tables/team-groups-table.tsx
@@ -5841,7 +5830,6 @@ msgstr "Inativo"
 #: apps/remix/app/components/general/app-nav-mobile.tsx
 #: apps/remix/app/components/general/app-nav-mobile.tsx
 #: apps/remix/app/components/general/document/document-status.tsx
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "Inbox"
 msgstr "Caixa de entrada"
 
@@ -6124,10 +6112,6 @@ msgstr "Entrou"
 #: apps/remix/app/routes/_authenticated+/dashboard.tsx
 msgid "Joined {0}"
 msgstr "Entrou {0}"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Jump directly to pending documents for faster triage"
-msgstr "Vá direto para os documentos pendentes para uma triagem mais rápida"
 
 #: apps/remix/app/routes/_authenticated+/admin+/teams.$id.tsx
 msgid "Key identifiers and relationships for this team."
@@ -6855,6 +6839,7 @@ msgid "New Password"
 msgstr "Nova Senha"
 
 #: apps/remix/app/components/general/dashboard/dashboard-recent-activity-list.tsx
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "Newest first"
 msgstr "Mais recentes primeiro"
 
@@ -6890,10 +6875,6 @@ msgstr "Não"
 #: apps/remix/app/components/tables/documents-table-empty-state.tsx
 msgid "No active drafts"
 msgstr "Nenhum rascunho ativo"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "No data available yet."
-msgstr "Ainda não há dados disponíveis."
 
 #: apps/remix/app/components/general/pdf-viewer/envelope-pdf-viewer.tsx
 #: apps/remix/app/components/general/pdf-viewer/pdf-viewer.tsx
@@ -7144,6 +7125,7 @@ msgid "Off"
 msgstr "Off"
 
 #: apps/remix/app/components/general/dashboard/dashboard-recent-activity-list.tsx
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "Oldest first"
 msgstr "Mais antigos primeiro"
 
@@ -7216,17 +7198,9 @@ msgstr "Ops! Algo deu errado."
 msgid "Open all documents"
 msgstr "Abrir todos os documentos"
 
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Open completed"
-msgstr "Abrir concluídos"
-
 #: apps/remix/app/routes/_authenticated+/o.$orgUrl._index.tsx
 msgid "Open menu"
 msgstr "Open menu"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Open pending"
-msgstr "Abrir pendentes"
 
 #: apps/remix/app/components/general/stack-avatars-with-tooltip.tsx
 msgid "Opened"
@@ -7592,7 +7566,6 @@ msgstr "Documento PDF"
 #: apps/remix/app/routes/_authenticated+/admin+/email-domains.$id.tsx
 #: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.members.tsx
 #: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 #: packages/lib/constants/document.ts
 #: packages/ui/components/document/document-read-only-fields.tsx
 #: packages/ui/components/document/envelope-recipient-field-tooltip.tsx
@@ -7622,10 +7595,6 @@ msgstr "Convites pendentes"
 #: apps/remix/app/routes/_authenticated+/admin+/teams.$id.tsx
 msgid "Pending Organisation Invites"
 msgstr "Pending Organisation Invites"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Pending queue"
-msgstr "Fila de pendentes"
 
 #: apps/remix/app/routes/_authenticated+/admin+/email-domains.$id.tsx
 msgid "Pending since"
@@ -8106,10 +8075,6 @@ msgstr "Lendo seu documento"
 msgid "Ready"
 msgstr "Pronto"
 
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Ready for bulk actions"
-msgstr "Pronto para ações em massa"
-
 #: apps/remix/app/routes/_internal+/[__htmltopdf]+/certificate.tsx
 #: packages/lib/server-only/pdf/render-certificate.ts
 msgid "Reason"
@@ -8341,7 +8306,6 @@ msgstr "Rejeitar Documento"
 #: apps/remix/app/components/general/document/document-status.tsx
 #: apps/remix/app/components/general/envelope-editor/envelope-editor-header.tsx
 #: apps/remix/app/components/general/stack-avatars-with-tooltip.tsx
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 #: apps/remix/app/routes/_internal+/[__htmltopdf]+/certificate.tsx
 #: packages/lib/constants/document.ts
 #: packages/lib/server-only/pdf/render-certificate.ts
@@ -8692,10 +8656,6 @@ msgstr "Retornar para login"
 #: apps/remix/app/components/general/envelope-editor/envelope-editor.tsx
 msgid "Return to templates"
 msgstr "Retornar para modelos"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Review completed documents and audit results"
-msgstr "Revise documentos concluídos e resultados de auditoria"
 
 #: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "Review pending"
@@ -9064,10 +9024,6 @@ msgstr "Selecione o alinhamento vertical"
 msgid "Select visibility"
 msgstr "Selecione a visibilidade"
 
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Selected"
-msgstr "Selecionados"
-
 #: apps/remix/app/components/dialogs/envelopes-bulk-delete-dialog.tsx
 msgid "Selected documents will be permanently deleted"
 msgstr "Selected documents will be permanently deleted"
@@ -9251,10 +9207,6 @@ msgstr "Show license key"
 #: apps/remix/app/routes/_authenticated+/t.$teamUrl+/settings.public-profile.tsx
 msgid "Show templates in your public profile for your audience to sign and get started quickly"
 msgstr "Mostre modelos em seu perfil público para seu público assinar e começar rapidamente"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Showing all documents from the current result set"
-msgstr "Exibindo todos os documentos do conjunto de resultados atual"
 
 #: apps/remix/app/components/dialogs/sign-field-signature-dialog.tsx
 #: apps/remix/app/components/general/document-signing/document-signing-auth-2fa.tsx
@@ -9686,6 +9638,7 @@ msgid "Sorry, we were unable to download the certificate. Please try again later
 msgstr "Desculpe, não conseguimos baixar o certificado. Por favor, tente novamente mais tarde."
 
 #: apps/remix/app/components/general/dashboard/dashboard-recent-activity-list.tsx
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "Sort by"
 msgstr "Ordenar por"
 
@@ -9727,10 +9680,6 @@ msgstr "Estatísticas"
 #: packages/lib/server-only/pdf/render-audit-logs.ts
 msgid "Status"
 msgstr "Status"
-
-#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
-msgid "Status distribution"
-msgstr "Distribuição por status"
 
 #. placeholder {0}: currentStepData.order
 #. placeholder {1}: envelopeEditorSteps.length
@@ -9939,6 +9888,10 @@ msgstr "Requisitos do Sistema"
 #: apps/remix/app/components/general/app-command-menu.tsx
 msgid "System Theme"
 msgstr "Tema do Sistema"
+
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
+msgid "Table"
+msgstr "Tabela"
 
 #: apps/remix/app/components/dialogs/admin-swap-subscription-dialog.tsx
 msgid "Target Organisation"
@@ -11051,10 +11004,12 @@ msgid "Title"
 msgstr "Título"
 
 #: apps/remix/app/components/general/dashboard/dashboard-recent-activity-list.tsx
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "Title (A-Z)"
 msgstr "Título (A-Z)"
 
 #: apps/remix/app/components/general/dashboard/dashboard-recent-activity-list.tsx
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
 msgid "Title (Z-A)"
 msgstr "Título (Z-A)"
 
@@ -11288,6 +11243,10 @@ msgstr "Transfer documents to a different team"
 #: apps/remix/app/components/dialogs/webhook-edit-dialog.tsx
 msgid "Triggers"
 msgstr "Gatilhos"
+
+#: apps/remix/app/routes/_authenticated+/t.$teamUrl+/documents._index.tsx
+msgid "Try adjusting your filters to see documents here."
+msgstr "Tente ajustar seus filtros para visualizar documentos aqui."
 
 #: apps/remix/app/components/dialogs/ai-field-detection-dialog.tsx
 #: apps/remix/app/components/dialogs/ai-field-detection-dialog.tsx

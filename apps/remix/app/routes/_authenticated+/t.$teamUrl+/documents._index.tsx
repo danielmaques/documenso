@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { msg } from '@lingui/core/macro';
+import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
 import { EnvelopeType } from '@prisma/client';
 import { FolderType, OrganisationType } from '@prisma/client';
-import { CheckCheckIcon, Clock3Icon, LayersIcon } from 'lucide-react';
+import { CheckCheckIcon, Clock3Icon, LayersIcon, LayoutGridIcon, Rows3Icon } from 'lucide-react';
 import { useParams, useSearchParams } from 'react-router';
 import { Link } from 'react-router';
 import { z } from 'zod';
@@ -62,11 +63,14 @@ const ZSearchParamsSchema = ZFindDocumentsInternalRequestSchema.pick({
 }).extend({
   senderIds: z.string().transform(parseToIntegerArray).optional().catch([]),
   sort: z.enum(['newest', 'oldest', 'title-asc', 'title-desc']).optional(),
+  view: z.enum(['table', 'grid']).optional(),
 });
 
 type DashboardSortOption = 'newest' | 'oldest' | 'title-asc' | 'title-desc';
+type DocumentsViewMode = 'table' | 'grid';
 
 export default function DocumentsPage() {
+  const { i18n } = useLingui();
   const organisation = useCurrentOrganisation();
   const team = useCurrentTeam();
 
@@ -149,6 +153,7 @@ export default function DocumentsPage() {
 
   const currentStatus = findDocumentSearchParams.status || ExtendedDocumentStatus.ALL;
   const currentSort = findDocumentSearchParams.sort || 'newest';
+  const currentView = findDocumentSearchParams.view || 'table';
   const documentsPath = formatDocumentsPath(team.url);
   const totalDocuments = stats[ExtendedDocumentStatus.ALL] || 0;
 
@@ -201,6 +206,26 @@ export default function DocumentsPage() {
     setSearchParams(params, { preventScrollReset: true });
   };
 
+  const handleViewChange = (value: DocumentsViewMode) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (value === 'table') {
+      params.delete('view');
+    } else {
+      params.set('view', value);
+    }
+
+    if (params.has('page')) {
+      params.delete('page');
+    }
+
+    if (value === 'grid') {
+      setRowSelection({});
+    }
+
+    setSearchParams(params, { preventScrollReset: true });
+  };
+
   const isInitialLoading = isLoading && !data;
 
   return (
@@ -232,25 +257,14 @@ export default function DocumentsPage() {
                 </div>
               </div>
 
-              {(folderId || currentStatus !== ExtendedDocumentStatus.PENDING) && (
-                <div className="grid w-full gap-2 sm:grid-cols-2 lg:w-auto">
-                  {folderId && (
-                    <Button asChild variant="outline" className="w-full bg-background/60">
-                      <Link to={documentsPath}>
-                        <LayersIcon className="mr-2 h-4 w-4" />
-                        <Trans>Open all documents</Trans>
-                      </Link>
-                    </Button>
-                  )}
-
-                  {currentStatus !== ExtendedDocumentStatus.PENDING && (
-                    <Button asChild className="w-full">
-                      <Link to={getTabHref(ExtendedDocumentStatus.PENDING)}>
-                        <Clock3Icon className="mr-2 h-4 w-4" />
-                        <Trans>Review pending</Trans>
-                      </Link>
-                    </Button>
-                  )}
+              {folderId && (
+                <div className="w-full lg:w-auto">
+                  <Button asChild variant="outline" className="w-full bg-background/60">
+                    <Link to={documentsPath}>
+                      <LayersIcon className="mr-2 h-4 w-4" />
+                      <Trans>Open all documents</Trans>
+                    </Link>
+                  </Button>
                 </div>
               )}
             </CardContent>
@@ -326,7 +340,7 @@ export default function DocumentsPage() {
                       </TabsList>
                     </Tabs>
 
-                    <div className="grid gap-3 rounded-lg border border-border/50 bg-muted/20 p-3 md:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_220px_220px_300px]">
+                    <div className="grid gap-3 rounded-lg border border-border/50 bg-muted/20 p-3 md:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_220px_220px_110px_300px]">
                       <div className="min-w-0">
                         {team && <DocumentsTableSenderFilter teamId={team.id} />}
                       </div>
@@ -357,6 +371,35 @@ export default function DocumentsPage() {
                           </SelectContent>
                         </Select>
                       </div>
+                      <div className="min-w-0">
+                        <div className="grid grid-cols-2 gap-1 rounded-lg border border-border/70 bg-background/70 p-1">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant={currentView === 'table' ? 'secondary' : 'ghost'}
+                            onClick={() => handleViewChange('table')}
+                            className="w-full justify-center"
+                          >
+                            <Rows3Icon className="h-4 w-4" />
+                            <span className="sr-only">
+                              <Trans>Table</Trans>
+                            </span>
+                          </Button>
+
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant={currentView === 'grid' ? 'secondary' : 'ghost'}
+                            onClick={() => handleViewChange('grid')}
+                            className="w-full justify-center"
+                          >
+                            <LayoutGridIcon className="h-4 w-4" />
+                            <span className="sr-only">
+                              <Trans>Grid</Trans>
+                            </span>
+                          </Button>
+                        </div>
+                      </div>
                       <div className="min-w-0 md:col-span-2 xl:col-span-1">
                         <DocumentSearch initialValue={findDocumentSearchParams.query} />
                       </div>
@@ -367,18 +410,58 @@ export default function DocumentsPage() {
 
               <Card className="border-border/60 bg-background/90 shadow-sm">
                 <CardContent className="p-4">
-                  <DocumentsTable
-                    data={sortedDocumentsData}
-                    isLoading={isLoading}
-                    isLoadingError={isLoadingError}
-                    onMoveDocument={(documentId) => {
-                      setDocumentToMove(documentId);
-                      setIsMovingDocument(true);
-                    }}
-                    enableSelection
-                    rowSelection={rowSelection}
-                    onRowSelectionChange={setRowSelection}
-                  />
+                  {currentView === 'table' ? (
+                    <DocumentsTable
+                      data={sortedDocumentsData}
+                      isLoading={isLoading}
+                      isLoadingError={isLoadingError}
+                      onMoveDocument={(documentId) => {
+                        setDocumentToMove(documentId);
+                        setIsMovingDocument(true);
+                      }}
+                      enableSelection
+                      rowSelection={rowSelection}
+                      onRowSelectionChange={setRowSelection}
+                    />
+                  ) : (
+                    <div className="space-y-4">
+                      {sortedDocumentsData?.data && sortedDocumentsData.data.length > 0 ? (
+                        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                          {sortedDocumentsData.data.map((document) => (
+                            <Link
+                              key={document.envelopeId}
+                              to={`${documentsPath}/${document.envelopeId}`}
+                              className="rounded-xl border border-border/60 bg-background/60 p-4 transition-colors hover:border-border hover:bg-background/90"
+                            >
+                              <div className="space-y-3">
+                                <p className="truncate text-sm font-medium">{document.title}</p>
+
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-xs text-muted-foreground">
+                                    {i18n.date(document.createdAt, {
+                                      dateStyle: 'medium',
+                                      timeStyle: 'short',
+                                    })}
+                                  </p>
+
+                                  <DocumentStatus status={document.status} />
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="rounded-xl border border-dashed border-border/60 px-4 py-10 text-center">
+                          <p className="font-medium">
+                            <Trans>No documents found</Trans>
+                          </p>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            <Trans>Try adjusting your filters to see documents here.</Trans>
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </>
@@ -399,29 +482,33 @@ export default function DocumentsPage() {
             />
           )}
 
-          <EnvelopesTableBulkActionBar
-            selectedCount={selectedEnvelopeIds.length}
-            onMoveClick={() => setIsBulkMoveDialogOpen(true)}
-            onDeleteClick={() => setIsBulkDeleteDialogOpen(true)}
-            onClearSelection={() => setRowSelection({})}
-          />
+          {currentView === 'table' && (
+            <>
+              <EnvelopesTableBulkActionBar
+                selectedCount={selectedEnvelopeIds.length}
+                onMoveClick={() => setIsBulkMoveDialogOpen(true)}
+                onDeleteClick={() => setIsBulkDeleteDialogOpen(true)}
+                onClearSelection={() => setRowSelection({})}
+              />
 
-          <EnvelopesBulkMoveDialog
-            envelopeIds={selectedEnvelopeIds}
-            envelopeType={EnvelopeType.DOCUMENT}
-            open={isBulkMoveDialogOpen}
-            currentFolderId={folderId}
-            onOpenChange={setIsBulkMoveDialogOpen}
-            onSuccess={() => setRowSelection({})}
-          />
+              <EnvelopesBulkMoveDialog
+                envelopeIds={selectedEnvelopeIds}
+                envelopeType={EnvelopeType.DOCUMENT}
+                open={isBulkMoveDialogOpen}
+                currentFolderId={folderId}
+                onOpenChange={setIsBulkMoveDialogOpen}
+                onSuccess={() => setRowSelection({})}
+              />
 
-          <EnvelopesBulkDeleteDialog
-            envelopeIds={selectedEnvelopeIds}
-            envelopeType={EnvelopeType.DOCUMENT}
-            open={isBulkDeleteDialogOpen}
-            onOpenChange={setIsBulkDeleteDialogOpen}
-            onSuccess={() => setRowSelection({})}
-          />
+              <EnvelopesBulkDeleteDialog
+                envelopeIds={selectedEnvelopeIds}
+                envelopeType={EnvelopeType.DOCUMENT}
+                open={isBulkDeleteDialogOpen}
+                onOpenChange={setIsBulkDeleteDialogOpen}
+                onSuccess={() => setRowSelection({})}
+              />
+            </>
+          )}
         </div>
       </div>
     </EnvelopeDropZoneWrapper>
