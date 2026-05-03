@@ -97,6 +97,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      /**
+       * Explicit alias so SSR / module-runner resolves `~/…` the same as client.
+       * tsconfigPaths sometimes does not apply to every SSR graph edge.
+       */
+      '~': path.resolve(__dirname, 'app'),
       https: 'node:https',
       '.prisma/client/default': path.resolve(
         __dirname,

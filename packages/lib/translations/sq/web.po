@@ -1693,7 +1693,7 @@ msgstr "CC'd"
 
 #: packages/lib/constants/recipient-roles.ts
 msgid "Ccers"
-msgstr ""
+msgstr "Ccers"
 
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/text-field.tsx
 msgid "Character Limit"
@@ -4204,7 +4204,7 @@ msgstr "MAU (dokument i përfunduar)"
 
 #: apps/remix/app/routes/_authenticated+/admin+/stats.tsx
 msgid "MAU (signed in)"
-msgstr ""
+msgstr "MAU (signed in)"
 
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/number-field.tsx
 msgid "Max"
