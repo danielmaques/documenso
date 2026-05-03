@@ -73,9 +73,9 @@ export default function EnvelopeEditorHeader() {
   };
 
   return (
-    <nav className="w-full border-b border-border bg-background px-4 py-3 md:px-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex min-w-0 flex-1 items-center space-x-4">
+    <nav className="w-full border-b border-border/80 bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/85 md:px-6">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           {editorConfig.embedded?.customBrandingLogo ? (
             <img
               src={`/api/branding/logo/team/${envelope.teamId}`}
@@ -87,9 +87,9 @@ export default function EnvelopeEditorHeader() {
               <BrandingLogo className="h-6 w-auto" />
             </Link>
           )}
-          <Separator orientation="vertical" className="h-6 shrink-0" />
+          <Separator orientation="vertical" className="hidden h-6 shrink-0 sm:block" />
 
-          <div className="flex min-w-0 items-center space-x-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <EnvelopeItemTitleInput
               dataTestId="envelope-title-input"
               disabled={!envelopeItemPermissions.canTitleBeChanged || !allowConfigureEnvelopeTitle}
@@ -181,7 +181,7 @@ export default function EnvelopeEditorHeader() {
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center space-x-2">
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
           {allowAttachments &&
             (isEmbedded ? (
               <EmbeddedEditorAttachmentPopover buttonSize="sm" />

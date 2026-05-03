@@ -190,11 +190,11 @@ export const EnvelopeEditor = () => {
       <EnvelopeEditorHeader />
 
       {/* Main Content Area */}
-      <div className="flex h-[calc(100vh-4rem)] w-screen">
+      <div className="flex h-[calc(100vh-4rem)] w-screen overflow-hidden">
         {/* Left Section - Step Navigation */}
         <div
           className={cn(
-            'flex w-80 flex-shrink-0 flex-col overflow-y-auto border-r border-border bg-background py-4',
+            'flex w-80 flex-shrink-0 flex-col overflow-y-auto border-r border-border/70 bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/85',
             {
               'w-14': minimizeLeftSidebar,
             },
@@ -249,14 +249,14 @@ export const EnvelopeEditor = () => {
               <h3 className="flex items-end justify-between text-sm font-semibold text-foreground">
                 {isDocument ? <Trans>Document Editor</Trans> : <Trans>Template Editor</Trans>}
 
-                <span className="ml-2 rounded border bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground">
+                <span className="ml-2 rounded border border-border/60 bg-muted/40 px-2 py-0.5 text-xs text-muted-foreground">
                   <Trans context="The step counter">
                     Step {currentStepData.order}/{envelopeEditorSteps.length}
                   </Trans>
                 </span>
               </h3>
 
-              <div className="relative my-4 h-[4px] rounded-md bg-muted">
+              <div className="relative my-4 h-[4px] rounded-md bg-muted/70">
                 <motion.div
                   layout="size"
                   layoutId="document-flow-container-step"
@@ -287,8 +287,8 @@ export const EnvelopeEditor = () => {
                   className={cn(
                     `cursor-pointer rounded-lg text-left transition-colors ${
                       isActive
-                        ? 'border border-green-200 bg-green-50 dark:border-green-500/20 dark:bg-green-500/10'
-                        : 'border border-gray-200 hover:bg-gray-50 dark:border-gray-400/20 dark:hover:bg-gray-400/10'
+                        ? 'border border-primary/30 bg-primary/5 shadow-sm'
+                        : 'border border-border/70 bg-background/70 hover:border-border hover:bg-muted/40'
                     }`,
                     {
                       'p-3': !minimizeLeftSidebar,
@@ -300,12 +300,12 @@ export const EnvelopeEditor = () => {
                     <div
                       className={`rounded border p-2 ${
                         isActive
-                          ? 'border-green-200 bg-green-50 dark:border-green-500/20 dark:bg-green-500/10'
-                          : 'border-gray-100 bg-gray-100 dark:border-gray-400/20 dark:bg-gray-400/10'
+                          ? 'border-primary/30 bg-primary/10'
+                          : 'border-border/60 bg-muted/40'
                       }`}
                     >
                       <Icon
-                        className={`h-4 w-4 ${isActive ? 'text-green-600' : 'text-gray-600'}`}
+                        className={`h-4 w-4 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}
                       />
                     </div>
 
@@ -313,9 +313,7 @@ export const EnvelopeEditor = () => {
                       <div>
                         <div
                           className={`text-sm font-medium ${
-                            isActive
-                              ? 'text-green-900 dark:text-green-400'
-                              : 'text-foreground dark:text-muted-foreground'
+                            isActive ? 'text-foreground' : 'text-muted-foreground'
                           }`}
                         >
                           {t(step.title)}
@@ -337,12 +335,12 @@ export const EnvelopeEditor = () => {
 
           {/* Quick Actions. */}
           <div
-            className={cn('space-y-3 px-4 [&_.lucide]:text-muted-foreground', {
+            className={cn('space-y-2 px-4 [&_.lucide]:text-muted-foreground', {
               'px-2': minimizeLeftSidebar,
             })}
           >
             {!minimizeLeftSidebar && (
-              <h4 className="text-sm font-semibold text-foreground">
+              <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 <Trans>Quick Actions</Trans>
               </h4>
             )}
@@ -353,7 +351,7 @@ export const EnvelopeEditor = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start"
+                    className="w-full justify-start rounded-md hover:bg-muted/70"
                     title={t(msg`Settings`)}
                   >
                     <SettingsIcon className="h-4 w-4" />
@@ -380,7 +378,7 @@ export const EnvelopeEditor = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-full justify-start"
+                      className="w-full justify-start rounded-md hover:bg-muted/70"
                       title={t(msg`Send Envelope`)}
                     >
                       <SendIcon className="h-4 w-4" />
@@ -400,7 +398,7 @@ export const EnvelopeEditor = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-full justify-start"
+                      className="w-full justify-start rounded-md hover:bg-muted/70"
                       title={t(msg`Resend Envelope`)}
                     >
                       <SendIcon className="h-4 w-4" />
@@ -427,7 +425,7 @@ export const EnvelopeEditor = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start"
+                    className="w-full justify-start rounded-md hover:bg-muted/70"
                     title={t(msg`Direct Link`)}
                   >
                     <LinkIcon className="h-4 w-4" />
@@ -450,7 +448,7 @@ export const EnvelopeEditor = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start"
+                    className="w-full justify-start rounded-md hover:bg-muted/70"
                     title={t(msg`Duplicate Envelope`)}
                   >
                     <CopyPlusIcon className="h-4 w-4" />
@@ -476,7 +474,7 @@ export const EnvelopeEditor = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start"
+                    className="w-full justify-start rounded-md hover:bg-muted/70"
                     title={t(msg`Save as Template`)}
                   >
                     <FileOutputIcon className="h-4 w-4" />
@@ -500,7 +498,7 @@ export const EnvelopeEditor = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start"
+                    className="w-full justify-start rounded-md hover:bg-muted/70"
                     title={t(msg`Download PDF`)}
                   >
                     <DownloadCloudIcon className="h-4 w-4" />
@@ -528,7 +526,7 @@ export const EnvelopeEditor = () => {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start"
+                    className="w-full justify-start rounded-md hover:bg-muted/70"
                     title={t(msg`Delete Envelope`)}
                   >
                     <Trash2Icon className="h-4 w-4" />
@@ -558,7 +556,7 @@ export const EnvelopeEditor = () => {
           {/* Footer of left sidebar. */}
           {!editorConfig.embedded && (
             <div
-              className={cn('mt-auto px-4', {
+              className={cn('mt-auto border-t border-border/60 px-4 pt-3', {
                 'px-2': minimizeLeftSidebar,
               })}
             >
@@ -588,7 +586,7 @@ export const EnvelopeEditor = () => {
         </div>
 
         {/* Main Content - Changes based on current step */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-muted/20">
           {match({
             pageToRender,
             allowUploadAndRecipientStep,
