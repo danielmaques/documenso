@@ -63,7 +63,7 @@ const handleFallbackErrorMessages = (code: string) => {
 const LOGIN_REDIRECT_PATH = '/';
 
 const inputClasses =
-  'h-11 rounded-lg border-border/70 bg-background/60 transition-shadow duration-200 focus-visible:ring-2 focus-visible:ring-documenso-400/60 focus-visible:ring-offset-0 focus-visible:shadow-[0_0_0_4px_rgba(162,231,113,0.18)]';
+  'h-11 rounded-lg border-border/70 bg-background/60 transition-shadow duration-200 focus-visible:ring-2 focus-visible:ring-documenso-400/60 focus-visible:ring-offset-0 focus-visible:shadow-[0_0_0_4px_rgba(249,115,22,0.18)]';
 
 export const ZSignInFormSchema = z.object({
   email: zEmail().min(1),
