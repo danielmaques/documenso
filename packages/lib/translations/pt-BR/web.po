@@ -11257,7 +11257,7 @@ msgstr "Tente novamente"
 
 #: apps/remix/app/components/dialogs/ai-features-enable-dialog.tsx
 msgid "Turn on AI detection to automatically find recipients and fields in your documents. AI providers do not retain your data for training."
-msgstr "Turn on AI detection to automatically find recipients and fields in your documents. AI providers do not retain your data for training."
+msgstr "Ative a detecção por IA para encontrar automaticamente destinatários e campos em seus documentos. Os provedores de IA não retêm seus dados para treinamento."
 
 #: apps/remix/app/routes/_authenticated+/settings+/security._index.tsx
 msgid "Two factor authentication"
@@ -13355,7 +13355,7 @@ msgstr "Você receberá uma cópia por e-mail do documento assinado assim que to
 
 #: apps/remix/app/components/dialogs/ai-features-enable-dialog.tsx
 msgid "You're an admin. You can enable AI features for this team right away. Everyone on the team will see AI detection once enabled."
-msgstr "You're an admin. You can enable AI features for this team right away. Everyone on the team will see AI detection once enabled."
+msgstr "Você é um administrador. Pode ativar os recursos de IA para esta equipe agora mesmo. Todos os membros da equipe verão a detecção por IA assim que ela for ativada."
 
 #: apps/remix/app/components/dialogs/ai-field-detection-dialog.tsx
 #: apps/remix/app/components/dialogs/ai-recipient-detection-dialog.tsx
@@ -13459,7 +13459,7 @@ msgstr "Seus modelos de assinatura direta"
 
 #: apps/remix/app/components/dialogs/ai-features-enable-dialog.tsx
 msgid "Your document content will be sent securely to our AI provider solely for detection and will not be stored or used for training."
-msgstr "Your document content will be sent securely to our AI provider solely for detection and will not be stored or used for training."
+msgstr "O conteúdo do seu documento será enviado com segurança ao nosso provedor de IA exclusivamente para detecção e não será armazenado nem usado para treinamento."
 
 #: apps/remix/app/components/embed/authoring/configure-document-upload.tsx
 #: apps/remix/app/components/general/document/document-upload-button-legacy.tsx
