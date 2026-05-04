@@ -1,4 +1,4 @@
-import { getInvoices } from '@documenso/ee/server-only/stripe/get-invoices';
+import { getInvoices } from '@documenso/ee/server-only/billing/get-invoices';
 import { IS_BILLING_ENABLED } from '@documenso/lib/constants/app';
 import { ORGANISATION_MEMBER_ROLE_PERMISSIONS_MAP } from '@documenso/lib/constants/organisations';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
@@ -52,13 +52,13 @@ export const getInvoicesRoute = authenticatedProcedure
       customerId: organisation.customerId,
     });
 
-    return invoices.data.map((invoice) => ({
+    return invoices.map((invoice) => ({
       id: invoice.id,
-      status: invoice.status,
-      created: invoice.created,
-      currency: invoice.currency,
-      total: invoice.total,
-      hosted_invoice_url: invoice.hosted_invoice_url,
-      invoice_pdf: invoice.invoice_pdf,
+      status: invoice.status ?? 'unknown',
+      created: invoice.created_at ? Math.floor(new Date(invoice.created_at).valueOf() / 1000) : 0,
+      currency: invoice.details?.totals?.currency_code?.toLowerCase() ?? 'usd',
+      total: Number(invoice.details?.totals?.grand_total ?? 0),
+      hosted_invoice_url: invoice.invoice_url,
+      invoice_pdf: invoice.receipt_url,
     }));
   });

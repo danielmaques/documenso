@@ -7,8 +7,8 @@ import { nanoid } from 'nanoid';
 
 import {
   assertMemberCountWithinCap,
-  syncMemberCountWithStripeSeatPlan,
-} from '@documenso/ee/server-only/stripe/update-subscription-item-quantity';
+  syncMemberCountWithBillingSeatPlan,
+} from '@documenso/ee/server-only/billing/update-subscription-item-quantity';
 import { mailer } from '@documenso/email/mailer';
 import { OrganisationInviteEmailTemplate } from '@documenso/email/templates/organisation-invite';
 import { NEXT_PUBLIC_WEBAPP_URL } from '@documenso/lib/constants/app';
@@ -134,7 +134,7 @@ export const createOrganisationMemberInvites = async ({
   if (subscription) {
     await assertMemberCountWithinCap(subscription, organisationClaim, totalMemberCountWithInvites);
 
-    await syncMemberCountWithStripeSeatPlan(
+    await syncMemberCountWithBillingSeatPlan(
       subscription,
       organisationClaim,
       totalMemberCountWithInvites,

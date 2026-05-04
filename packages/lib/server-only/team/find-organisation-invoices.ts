@@ -1,4 +1,4 @@
-import { getInvoices } from '@documenso/ee/server-only/stripe/get-invoices';
+import { getInvoices } from '@documenso/ee/server-only/billing/get-invoices';
 import { TEAM_MEMBER_ROLE_PERMISSIONS_MAP } from '@documenso/lib/constants/teams';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
 import { prisma } from '@documenso/prisma';
@@ -36,19 +36,18 @@ export const findOrganisationInvoices = async ({ userId, teamId }: FindTeamInvoi
   }
 
   return {
-    ...results,
-    data: results.data.map((invoice) => ({
-      invoicePdf: invoice.invoice_pdf,
-      hostedInvoicePdf: invoice.hosted_invoice_url,
+    data: results.map((invoice) => ({
+      invoicePdf: invoice.receipt_url,
+      hostedInvoicePdf: invoice.invoice_url,
       status: invoice.status,
-      subtotal: invoice.subtotal,
-      total: invoice.total,
-      amountPaid: invoice.amount_paid,
-      amountDue: invoice.amount_due,
-      created: invoice.created,
-      paid: invoice.paid,
-      quantity: invoice.lines.data[0].quantity ?? 0,
-      currency: invoice.currency,
+      subtotal: Number(invoice.details?.totals?.grand_total ?? 0),
+      total: Number(invoice.details?.totals?.grand_total ?? 0),
+      amountPaid: Number(invoice.details?.totals?.grand_total ?? 0),
+      amountDue: 0,
+      created: invoice.created_at ? new Date(invoice.created_at).valueOf() / 1000 : 0,
+      paid: invoice.status === 'completed',
+      quantity: 1,
+      currency: invoice.details?.totals?.currency_code?.toLowerCase() ?? 'usd',
     })),
   };
 };

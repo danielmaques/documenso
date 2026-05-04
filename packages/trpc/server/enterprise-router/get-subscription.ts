@@ -1,5 +1,5 @@
-import { getInternalClaimPlans } from '@documenso/ee/server-only/stripe/get-internal-claim-plans';
-import { getSubscription } from '@documenso/ee/server-only/stripe/get-subscription';
+import { getInternalClaimPlans } from '@documenso/ee/server-only/billing/get-internal-claim-plans';
+import { getSubscription } from '@documenso/ee/server-only/billing/get-subscription';
 import { IS_BILLING_ENABLED } from '@documenso/lib/constants/app';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
 

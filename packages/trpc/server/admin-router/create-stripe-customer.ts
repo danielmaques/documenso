@@ -1,4 +1,4 @@
-import { createCustomer } from '@documenso/ee/server-only/stripe/create-customer';
+import { createCustomer } from '@documenso/ee/server-only/billing/create-customer';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
 import { prisma } from '@documenso/prisma';
 
@@ -38,9 +38,9 @@ export const createStripeCustomerRoute = adminProcedure
       throw new AppError(AppErrorCode.NOT_FOUND);
     }
 
-    // Create Stripe customer outside a transaction to avoid holding a
+    // Create billing customer outside a transaction to avoid holding a
     // connection open during the external API call.
-    const stripeCustomer = await createCustomer({
+    const billingCustomer = await createCustomer({
       name: organisation.name,
       email: organisation.owner.email,
     });
@@ -50,7 +50,7 @@ export const createStripeCustomerRoute = adminProcedure
         id: organisationId,
       },
       data: {
-        customerId: stripeCustomer.id,
+        customerId: billingCustomer.id,
       },
     });
   });

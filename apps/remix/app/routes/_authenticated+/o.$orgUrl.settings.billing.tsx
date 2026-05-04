@@ -3,7 +3,6 @@ import { useLingui } from '@lingui/react';
 import { Trans } from '@lingui/react/macro';
 import { SubscriptionStatus } from '@prisma/client';
 import { Loader } from 'lucide-react';
-import type Stripe from 'stripe';
 import { P, match } from 'ts-pattern';
 
 import { useCurrentOrganisation } from '@documenso/lib/client-only/providers/organisation';
@@ -44,11 +43,8 @@ export default function TeamsSettingBillingPage() {
     organisation.currentOrganisationRole,
   );
 
-  const { organisationSubscription, stripeSubscription } = subscription || {};
-
-  const currentProductName =
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    (stripeSubscription?.items.data[0].price.product as Stripe.Product | undefined)?.name;
+  const { organisationSubscription, currentPlanName } = subscription || {};
+  const currentProductName = currentPlanName;
 
   return (
     <div>

@@ -238,9 +238,15 @@ enum SubscriptionStatus {
   INACTIVE
 }
 
+enum BillingProvider {
+  STRIPE
+  PADDLE
+}
+
 model Subscription {
   id                Int                @id @default(autoincrement())
   status            SubscriptionStatus @default(INACTIVE)
+  provider          BillingProvider    @default(PADDLE)
   planId            String             @unique
   priceId           String
   periodEnd         DateTime?

@@ -7,10 +7,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Building2Icon, PlusIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import type { InternalClaimPlans } from '@documenso/ee/server-only/stripe/get-internal-claim-plans';
 import { useIsMounted } from '@documenso/lib/client-only/hooks/use-is-mounted';
 import { useCurrentOrganisation } from '@documenso/lib/client-only/providers/organisation';
 import { useSession } from '@documenso/lib/client-only/providers/session';
+import type { InternalClaimPlans } from '@documenso/lib/types/billing';
 import { INTERNAL_CLAIM_ID } from '@documenso/lib/types/subscription';
 import { isPersonalLayout } from '@documenso/lib/utils/organisations';
 import { trpc } from '@documenso/trpc/react';

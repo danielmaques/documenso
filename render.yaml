@@ -60,10 +60,14 @@ services:
       - key: NEXT_PRIVATE_SMTP_FROM_ADDRESS
         sync: false
 
-      # Stripe
-      - key: NEXT_PRIVATE_STRIPE_API_KEY
+      # Paddle
+      - key: NEXT_PRIVATE_PADDLE_API_KEY
         sync: false
-      - key: NEXT_PRIVATE_STRIPE_WEBHOOK_SECRET
+      - key: NEXT_PRIVATE_PADDLE_WEBHOOK_SECRET
+        sync: false
+      - key: NEXT_PRIVATE_PADDLE_ENVIRONMENT
+        value: 'sandbox'
+      - key: NEXT_PRIVATE_PADDLE_API_URL
         sync: false
 
       # Features

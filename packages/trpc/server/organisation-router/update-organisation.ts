@@ -1,6 +1,6 @@
 import { ORGANISATION_MEMBER_ROLE_PERMISSIONS_MAP } from '@documenso/lib/constants/organisations';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
-import { stripe } from '@documenso/lib/server-only/stripe';
+import { paddleRequest } from '@documenso/lib/server-only/paddle';
 import { buildOrganisationWhereQuery } from '@documenso/lib/utils/organisations';
 import { prisma } from '@documenso/prisma';
 
@@ -50,10 +50,11 @@ export const updateOrganisationRoute = authenticatedProcedure
     });
 
     if (updatedOrganisation.customerId) {
-      await stripe.customers.update(updatedOrganisation.customerId, {
-        metadata: {
-          organisationName: data.name,
-        },
+      await paddleRequest(`/customers/${updatedOrganisation.customerId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          name: data.name,
+        }),
       });
     }
   });

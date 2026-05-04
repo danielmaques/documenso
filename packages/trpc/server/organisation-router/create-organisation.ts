@@ -1,12 +1,12 @@
 import { OrganisationType } from '@prisma/client';
 
-import { createCheckoutSession } from '@documenso/ee/server-only/stripe/create-checkout-session';
-import { createCustomer } from '@documenso/ee/server-only/stripe/create-customer';
+import { createCheckoutSession } from '@documenso/ee/server-only/billing/create-checkout-session';
+import { createCustomer } from '@documenso/ee/server-only/billing/create-customer';
 import { IS_BILLING_ENABLED, NEXT_PUBLIC_WEBAPP_URL } from '@documenso/lib/constants/app';
 import { AppError, AppErrorCode } from '@documenso/lib/errors/app-error';
 import { createOrganisation } from '@documenso/lib/server-only/organisation/create-organisation';
 import { INTERNAL_CLAIM_ID, internalClaims } from '@documenso/lib/types/subscription';
-import { generateStripeOrganisationCreateMetadata } from '@documenso/lib/utils/billing';
+import { generateBillingOrganisationCreateMetadata } from '@documenso/lib/utils/billing';
 import { prisma } from '@documenso/prisma';
 
 import { authenticatedProcedure } from '../trpc';
@@ -58,7 +58,7 @@ export const createOrganisationRoute = authenticatedProcedure
         priceId,
         customerId: customer.id,
         returnUrl: `${NEXT_PUBLIC_WEBAPP_URL()}/settings/organisations`,
-        subscriptionMetadata: generateStripeOrganisationCreateMetadata(name, user.id),
+        subscriptionMetadata: generateBillingOrganisationCreateMetadata(name, user.id),
       });
 
       return {
